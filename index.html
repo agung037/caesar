@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caesar Cipher</title>
+    <meta name="title" content="Caesar Cipher by Agung Kurniawan">
+    <meta name="description" content="Caesar Cipher  app created by Agung Kurniawan using vue js">
+    <meta name="keywords" content="Caesar Cipher, Encryption Method">
+    <meta name="robots" content="index, follow">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="10 days">
+    <meta name="author" content="Agung Kurniawan">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+</head>
+
+<body>
+    <!-- script for vue -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <div id="app">
+
+        <div class="container">
+            <h1 class="text-center my-4">Caesar Cipher</h1>
+            <div class="shift col-md-2 my-5">
+                <label for="shift" class="form-label">Shift : A &#8594 {{ shiftPreview() }}</label>
+                <input v-model="shift" placeholder="shift value" type="number" class="form-control" id="shift">
+
+            </div>
+            <div class="textarea d-flex flex-wrap">
+                <div class="p-2 flex-fill">
+                    <label for="text1" class="form-label">Normal Text</label>
+                    <textarea :disabled="text1Active" style="text-transform:uppercase" v-model="normalText"
+                        class=" form-control" id="text1" rows="3"></textarea>
+                </div>
+                <div class="p-2 align-self-center">
+                    <button @click="reverse" class="btn btn-sm btn-dark"><i class="bi bi-arrow-left-right"></i></button>
+
+                </div>
+                <div class="p-2 flex-fill">
+                    <label for="text2" class="form-label">Chiper Text</label>
+                    <textarea :disabled="text2Active" v-model="chiperText" style="text-transform:uppercase"
+                        class="form-control" id="chiper" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="p-2 flex-fill">
+                <p>character count: {{ this.count() }}</p>
+            </div>
+
+            <button @click="go" class="btn btn-sm btn-primary">Process</button>
+
+
+        </div>
+
+
+
+
+
+    </div>
+
+    <!-- script for bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js"></script>
+
+
+
+
+
+    <script>
+        const { createApp } = Vue
+
+        const app = createApp({
+            data() {
+                return {
+                    normalText: "",
+                    chiperText: "",
+                    shift: 1,
+                    toChiperMode: true,
+                    text1Active: false,
+                    text2Active: true,
+                    alpha: "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
+                }
+            },
+
+            methods: {
+                go() {
+                    const alphabet = this.alpha.toUpperCase().split("")
+                    const source = this.toChiperMode ? this.normalText.toUpperCase().split("") : this.chiperText.toUpperCase().split("")
+
+                    let result = ""
+
+                    // loop untuk menidentifikasi semua huruf sumber
+                    for (let i = 0; i < source.length; i++) {
+                        let c = source[i]
+                        if (alphabet.includes(c)) {
+                            if (this.toChiperMode) {
+                                result += alphabet[alphabet.indexOf(c) + this.shift % 26]
+                            }
+                            else {
+                                result += alphabet[(alphabet.indexOf(c) + 26) - this.shift % 26]
+                            }
+                        } else {
+                            result += c
+                        }
+                    }
+
+                    if (this.toChiperMode) {
+                        this.chiperText = result
+                    } else {
+                        this.normalText = result
+                    }
+
+
+                },
+
+                count() {
+                    if (this.toChiperMode) {
+                        return this.normalText.length
+                    } else {
+                        return this.chiperText.length
+                    }
+                },
+                shiftPreview() {
+                    return this.alpha[this.shift % 26].toUpperCase()
+                },
+                reverse() {
+                    this.text1Active = !this.text1Active
+                    this.text2Active = !this.text2Active
+                    this.toChiperMode = !this.toChiperMode
+                }
+            }
+        }).mount('#app')
+
+    </script>
+
+
+
+</body>
+
+</html>
